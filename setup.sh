@@ -34,7 +34,7 @@ echo "------------------------------------------"
 sleep 3
 # step 3: bypass broken icon theme, then install GUI and required dependencies
 
-pd login ubuntu --user $TARGET_USER -- bash -c "sudo wget -q http://ports.ubuntu.com/pool/universe/e/elementary-xfce/elementary-xfce-icon-theme_0.19-1_all.deb && sudo apt install ./elementary-xfce-icon-theme_0.19-1_all.deb -y && sudo apt-mark hold elementary-xfce-icon-theme && sudo apt install xfce4 adb openjdk-21-jdk tar -y"
+pd login ubuntu --user $TARGET_USER -- bash -c "sudo wget -q http://ports.ubuntu.com/pool/universe/e/elementary-xfce/elementary-xfce-icon-theme_0.19-1_all.deb && sudo apt install ./elementary-xfce-icon-theme_0.19-1_all.deb -y && sudo apt-mark hold elementary-xfce-icon-theme && sudo apt install xfce4 adb openjdk-21-jdk tar mousepad -y"
 
 clear
 echo "Downloading & Installing Studio"
@@ -60,6 +60,7 @@ mkdir -p ~/Desktop
 cp /usr/share/applications/android-studio.desktop ~/Desktop/
 chmod +x ~/Desktop/android-studio.desktop
 
+~/startxfce4.sh
 # 4. Generate the "Next Steps" text file on the Desktop
 cat << "EOF" > ~/Desktop/NEXT_STEPS.txt
 === STEP 5: Set up Android Studio ===
