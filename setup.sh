@@ -26,8 +26,9 @@ pd install ubuntu
 pd login ubuntu -- bash -c "apt update && apt upgrade -y && apt install sudo adduser nano git wget -y && adduser --disabled-password --gecos \"\" $TARGET_USER && echo \"$TARGET_USER ALL=(ALL) NOPASSWD: ALL\" > /etc/sudoers.d/$TARGET_USER && chmod 0440 /etc/sudoers.d/$TARGET_USER"
 # step 3: install GUI and required dependencies
 
-pd login ubuntu --user $TARGET_USER -- bash -c " sudo apt install xfce4 adb openjdk-21-jdk tar -y && exit"
+# step 3: bypass broken icon theme, then install GUI and required dependencies
 
+pd login ubuntu --user $TARGET_USER -- bash -c "sudo wget -q http://ports.ubuntu.com/pool/universe/e/elementary-xfce/elementary-xfce-icon-theme_0.19-1_all.deb && sudo apt install ./elementary-xfce-icon-theme_0.19-1_all.deb -y && sudo apt-mark hold elementary-xfce-icon-theme && sudo apt install xfce4 adb openjdk-21-jdk tar -y"
 
 # step 4: install android studio
 
