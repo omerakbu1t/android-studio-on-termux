@@ -15,7 +15,7 @@ pkg install proot-distro -y
 pkg install wget git aapt2 -y
 # aapt2 is needed for later replacement of native android studio aapt2
 
-wget -O ~/startxfce4.sh (url to remote file)
+wget -O ~/startxfce4.sh https://raw.githubusercontent.com/omerakbu1t/android-studio-on-termux/refs/heads/main/startxfce4.sh
 chmod +x ~/startxfce4.sh
 
 
