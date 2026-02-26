@@ -31,7 +31,7 @@ pd login ubuntu --user $TARGET_USER -- bash -c " sudo apt install xfce4 adb open
 
 # step 4: install android studio
 
-pd login ubuntu --user $TARGET_USER -- bash -c 'mkdir ~/Android && wget -O studio.tar.gz https://redirector.gvt1.com/edgedl/android/studio/ide-zips/2024.1.1.11/android-studio-2024.1.1.11-linux.tar.gz && tar -xvzf studio.tar.gz -C ~/Android/ && rm studio.tar.gz && sudo apt-get --fix-missing install -y && sudo apt --fix-broken install -y && sudo wget -O /usr/share/applications/android-studio.desktop (path to raw desktop file)'
+pd login ubuntu --user $TARGET_USER -- bash -c 'mkdir ~/Android && wget -O studio.tar.gz https://redirector.gvt1.com/edgedl/android/studio/ide-zips/2024.1.1.11/android-studio-2024.1.1.11-linux.tar.gz && tar -xvzf studio.tar.gz -C ~/Android/ && rm studio.tar.gz && sudo apt-get --fix-missing install -y && sudo apt --fix-broken install -y && sudo wget -O /usr/share/applications/android-studio.desktop https://raw.githubusercontent.com/omerakbu1t/android-studio-on-termux/refs/heads/main/android-studio.desktop'
 
 
 # step 5: set up android studio
