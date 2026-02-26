@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Android Studio
+Icon=android-studio
+Icon=/home/ubuntu/Android/android-studio/bin/studio.png
+Comment=Android IDE
+Categories=Development;IDE;
+Terminal=false
+X-Desktop-File-Install-Version=0.28
