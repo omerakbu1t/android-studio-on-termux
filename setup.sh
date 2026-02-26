@@ -6,7 +6,7 @@ TARGET_USER="ubuntu"
 
 termux-setup-storage
 pkg update
-pkg upgrade
+pkg upgrade -y
 pkg install x11-repo -y
 pkg install termux-x11-nightly -y
 pkg install tur-repo -y
