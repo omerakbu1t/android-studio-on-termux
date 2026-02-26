@@ -5,7 +5,7 @@ TARGET_USER="ubuntu"
 # step 1: set up environment:
 
 termux-setup-storage
-pkg update
+pkg update -y
 pkg upgrade -y
 pkg install x11-repo -y
 pkg install termux-x11-nightly -y
