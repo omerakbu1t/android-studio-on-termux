@@ -27,7 +27,7 @@ sleep 3
 
 pd install ubuntu
 
-pd login ubuntu -- bash -c '
+pd login ubuntu -- bash -c "
 
 apt update -y
 apt upgrade -y 
@@ -35,7 +35,7 @@ apt install sudo adduser nano git wget -y
 adduser --disabled-password --gecos \"\" $TARGET_USER 
 echo \"$TARGET_USER ALL=(ALL) NOPASSWD: ALL\" > /etc/sudoers.d/$TARGET_USER
 chmod 0440 /etc/sudoers.d/$TARGET_USER
-'
+"
 
 
 
