@@ -128,10 +128,10 @@ rm android-sdk-aarch64-linux-musl.tar.xz
 mkdir -p /home/ubuntu/Android/Sdk/cmdline-tools/latest
 mv /home/ubuntu/android-sdk/cmdline-tools/* /home/ubuntu/Android/Sdk/cmdline-tools/latest/
 
-# 2. Accept licenses automatically using the 'yes' pipe
+# 2. Accept licenses automatically
 yes | /home/ubuntu/Android/Sdk/cmdline-tools/latest/bin/sdkmanager --licenses
 
-# 3. Pre-populate SDK using the 'yes' pipe
+# 3. Pre-populate SDK
 yes | /home/ubuntu/Android/Sdk/cmdline-tools/latest/bin/sdkmanager "platforms;android-36.1" "sources;android-36.1" "build-tools;36.1.0" "platform-tools"  --verbose
 
 # 1. Surgically overwrite platform-tools (leaves package.xml intact!)
@@ -141,7 +141,7 @@ cp -rf /home/ubuntu/android-sdk/build-tools/36.1.0/* /home/ubuntu/Android/Sdk/bu
 # 3. Clean up the leftover downloaded archive folder
 rm -rf /home/ubuntu/android-sdk
 
-# 4. Set the SDK path in Android Studio's config to avoid the "No Android SDK configured" error on first launch. We have to do this manually because the bundled JBR doesn't work with the sdkmanager tool, so we can't set it up through the normal command line way.
+# 4. Set the SDK path in Android Studios config to avoid the error on first launch. We have to do this manually because the bundled JBR doesn't work with the sdkmanager tool, so we cant set it up through the normal command line way.
 mkdir -p /home/ubuntu/.config/Google/AndroidStudio2025.3.1/options
 cat << "EOF" > /home/ubuntu/.config/Google/AndroidStudio2025.3.1/options/android.sdk.path.xml
 <application>
