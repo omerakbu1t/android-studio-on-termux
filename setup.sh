@@ -55,22 +55,33 @@ sudo apt install xfce4 adb openjdk-21-jdk tar unzip mousepad -y
 
 
 # step 4: install android studio, add shortcut, and create instructions
+
+
+pd login ubuntu --user $TARGET_USER -- bash -c '
 clear
 echo "Downloading & Installing Studio"
 echo "-------------------------------"
 
-
-pd login ubuntu --user $TARGET_USER -- bash -c '
 # 1. Download and extract Android Studio
 mkdir -p /home/ubuntu/Android
 wget -O studio.tar.gz '"$TARGET_STUDIO_URL"' --no-check-certificate
 tar -xvzf studio.tar.gz -C /home/ubuntu/Android/
 rm studio.tar.gz
 
+clear
+echo "Creating Desktop Shortcut"
+echo "-------------------------------"
+
 # 2. Fix apt and download the .desktop file
 sudo apt-get --fix-missing install -y
 sudo apt --fix-broken install -y
 sudo wget -O /usr/share/applications/android-studio.desktop https://raw.githubusercontent.com/omerakbu1t/android-studio-on-termux/main/android-studio.desktop
+
+
+
+clear
+echo "Fixing Dependency Issues"
+echo "-------------------------------"
 
 # 3. Replace the bundled JBR with the system JDK
 mv /home/ubuntu/Android/android-studio/jbr /home/ubuntu/Android/android-studio/jbr_x86_backup
@@ -84,6 +95,15 @@ wget https://repo1.maven.org/maven2/org/jetbrains/skiko/skiko-awt-runtime-linux-
 unzip -j skiko-awt-runtime-linux-arm64-0.9.47.jar "libskiko-linux-arm64.so"
 rm skiko-awt-runtime-linux-arm64-0.9.47.jar
 
+# 5. Link the native JNA library to fix the "Failed to load the jnidispatch library" error
+sudo apt install libjna-jni -y
+# Backup the original just in case
+mv /home/ubuntu/Android/android-studio/lib/jna/amd64/libjnidispatch.so /home/ubuntu/Android/android-studio/lib/jna/amd64/libjnidispatch.so.bak 2>/dev/null
+
+clear
+echo "Fixing Performance and Stability Issues"
+echo "-------------------------------"
+
 # disable chromium based rendering for better performance and stability (it will use software rendering instead, which is more compatible with ARM devices)
 echo "-Dide.browser.jcef.enabled=false" >> /home/ubuntu/Android/android-studio/bin/studio64.vmoptions
 
@@ -92,11 +112,6 @@ echo "-Dide.memory.cleaner=false" >> /home/ubuntu/Android/android-studio/bin/stu
 echo "-Dsun.java2d.opengl=false" >> /home/ubuntu/Android/android-studio/bin/studio64.vmoptions
 
 
-# 5. Link the native JNA library to fix the "Failed to load the jnidispatch library" error
-sudo apt install libjna-jni -y
-# Backup the original just in case
-mv /home/ubuntu/Android/android-studio/lib/jna/amd64/libjnidispatch.so /home/ubuntu/Android/android-studio/lib/jna/amd64/libjnidispatch.so.bak 2>/dev/null
-
 # Link the native Ubuntu ARM64 JNA into the amd64 folder
 ln -sf /usr/lib/aarch64-linux-gnu/jni/libjnidispatch.so /home/ubuntu/Android/android-studio/lib/jna/amd64/libjnidispatch.so
 
@@ -104,6 +119,9 @@ ln -sf /usr/lib/aarch64-linux-gnu/jni/libjnidispatch.so /home/ubuntu/Android/and
 mkdir -p /home/ubuntu/Android/android-studio/lib/jna/aarch64
 ln -sf /usr/lib/aarch64-linux-gnu/jni/libjnidispatch.so /home/ubuntu/Android/android-studio/lib/jna/aarch64/libjnidispatch.so
 
+clear
+echo "Fixing & Prepopulating Android SDK"
+echo "-------------------------------"
 
 
 cd /home/ubuntu
@@ -129,33 +147,7 @@ echo "android.aapt2FromMavenOverride=/home/ubuntu/Android/Sdk/build-tools/36.1.0
 mkdir -p /home/ubuntu/Desktop
 cp /usr/share/applications/android-studio.desktop /home/ubuntu/Desktop/
 chmod +x /home/ubuntu/Desktop/android-studio.desktop
-
-
-# 4. Generate the "Next Steps" text file on the Desktop
-cat << "EOF" > /home/ubuntu/Desktop/NEXT_STEPS.txt
-=== STEP 5: Set up Android Studio ===
-1. Open Android Studio from your new desktop shortcut.
-2. Install Android 14 (API 34) SDK instead of the default 16.
-3. IMPORTANT: when you create a project, stop the first gradle build. then:
-5. Add this to your project gradle.properties:
-   android.aapt2FromMavenOverride=/data/data/com.termux/files/usr/bin/aapt2
-
-Open a terminal in Ubuntu and copy-paste these 2 lines.:
-mv /home/ubuntu/Android/Sdk/platform-tools/adb /home/ubuntu/Android/Sdk/platform-tools/adb_x86_backup
-ln -s $(which adb) /home/ubuntu/Android/Sdk/platform-tools/adb
-
-=== STEP 7: Wireless Debugging ===
-1. Enable Wireless Debugging on your phone.
-2. Tap "Pair device with pairing code" at Developer Settings.
-3. note the ip, port, pairing code at that popup (this port is different than actual connection port)
-4. open a new terminal at ubuntu and type "adb pair <ip>:<port>"
-5. it will return a "succesfully paired" message. but our work is not done. go back to settings, and get the actual ip and port at that screen.
-6. at ubuntu terminal, type "adb connect <same ip>:<new port>" and connect
-
-thats all, have fun! MAKE SURE YOU DONT UPDATE VERSIONS UNLESS YOU KNOW WHAT URE DOING.
-EOF
 '
-
 
 clear
 echo "-------------------------------"
