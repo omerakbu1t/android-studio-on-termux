@@ -133,7 +133,7 @@ mv /home/ubuntu/android-sdk/cmdline-tools/* /home/ubuntu/Android/Sdk/cmdline-too
 yes | /home/ubuntu/Android/Sdk/cmdline-tools/latest/bin/sdkmanager --licenses
 
 # 3. Pre-populate SDK using the 'yes' pipe
-yes | /home/ubuntu/Android/Sdk/cmdline-tools/latest/bin/sdkmanager "platforms;android-36" "build-tools;36.1.0" "platform-tools" --verbose
+yes | /home/ubuntu/Android/Sdk/cmdline-tools/latest/bin/sdkmanager "platforms;android-36" "sources;android-36" "build-tools;36.1.0" "platform-tools"  --verbose
 
 rm -rf /home/ubuntu/Android/Sdk/platform-tools
 rm -rf /home/ubuntu/Android/Sdk/build-tools
