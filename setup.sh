@@ -7,7 +7,6 @@ TARGET_STUDIO_URL="https://edgedl.me.gvt1.com/android/studio/ide-zips/2025.3.1.6
 echo "Setting up Termux..."
 sleep 3
 pkg update -y
-pkg upgrade -y
 pkg install x11-repo -y
 pkg install termux-x11-nightly -y
 pkg install tur-repo -y
