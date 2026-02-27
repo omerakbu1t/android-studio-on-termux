@@ -61,7 +61,6 @@ mv ~/Android/android-studio/jbr ~/Android/android-studio/jbr_x86_backup
 ln -s /usr/lib/jvm/java-21-openjdk-arm64 ~/Android/android-studio/jbr
 
 # 4. Replace the bundled skiko with the system one (fixes rendering issues)
-# Create the directory just in case it doesn't exist yet
 mkdir -p ~/Android/android-studio/lib/skiko-awt-runtime-all/
 cd ~/Android/android-studio/lib/skiko-awt-runtime-all/
 wget https://repo1.maven.org/maven2/org/jetbrains/skiko/skiko-awt-runtime-linux-arm64/0.8.9/skiko-awt-runtime-linux-arm64-0.8.9.jar
@@ -74,6 +73,20 @@ echo "-Dide.browser.jcef.enabled=false" >> ~/Android/android-studio/bin/studio64
 # disable memory cleaner to prevent OOM errors, and disable opengl rendering which causes freezes and crashes on many devices
 echo "-Dide.memory.cleaner=false" >> ~/Android/android-studio/bin/studio64.vmoptions
 echo "-Dsun.java2d.opengl=false" >> ~/Android/android-studio/bin/studio64.vmoptions
+
+
+# 5. Link the native JNA library to fix the "Failed to load the jnidispatch library" error
+sudo apt install libjna-jni -y
+# Backup the original just in case
+mv ~/Android/android-studio/lib/jna/amd64/libjnidispatch.so ~/Android/android-studio/lib/jna/amd64/libjnidispatch.so.bak 2>/dev/null
+
+# Link the native Ubuntu ARM64 JNA into the amd64 folder
+ln -sf /usr/lib/aarch64-linux-gnu/jni/libjnidispatch.so ~/Android/android-studio/lib/jna/amd64/libjnidispatch.so
+
+# Also link it to an aarch64 folder, just to be safe if Studio gets smart later
+mkdir -p ~/Android/android-studio/lib/jna/aarch64
+ln -sf /usr/lib/aarch64-linux-gnu/jni/libjnidispatch.so ~/Android/android-studio/lib/jna/aarch64/libjnidispatch.so
+
 
 
 # 3. Create the Desktop shortcut
