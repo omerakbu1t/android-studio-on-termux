@@ -107,14 +107,15 @@ echo "-Dide.browser.jcef.enabled=false" >> /home/ubuntu/Android/android-studio/b
 # disable memory cleaner to prevent OOM errors, and disable opengl rendering which causes freezes and crashes on many devices
 echo "-Dide.memory.cleaner=false" >> /home/ubuntu/Android/android-studio/bin/studio64.vmoptions
 echo "-Dsun.java2d.opengl=false" >> /home/ubuntu/Android/android-studio/bin/studio64.vmoptions
-
+echo "-Didea.filewatcher.disabled=true" >> /home/ubuntu/Android/android-studio/bin/studio64.vmoptions
+echo "-Djna.nounpack=true" >> /home/ubuntu/Android/android-studio/bin/studio64.vmoptions
 
 # Link the native Ubuntu ARM64 JNA into the amd64 folder
-ln -sf /usr/lib/aarch64-linux-gnu/jni/libjnidispatch.so /home/ubuntu/Android/android-studio/lib/jna/amd64/libjnidispatch.so
+ln -sf /usr/lib/aarch64-linux-gnu/jni/libjnidispatch.system.so /home/ubuntu/Android/android-studio/lib/jna/amd64/libjnidispatch.so
 
 # Also link it to an aarch64 folder, just to be safe if Studio gets smart later
 mkdir -p /home/ubuntu/Android/android-studio/lib/jna/aarch64
-ln -sf /usr/lib/aarch64-linux-gnu/jni/libjnidispatch.so /home/ubuntu/Android/android-studio/lib/jna/aarch64/libjnidispatch.so
+ln -sf /usr/lib/aarch64-linux-gnu/jni/libjnidispatch.system.so /home/ubuntu/Android/android-studio/lib/jna/aarch64/libjnidispatch.so
 
 clear
 echo "Fixing & Prepopulating Android SDK"
@@ -148,6 +149,21 @@ echo "android.aapt2FromMavenOverride=/home/ubuntu/Android/Sdk/build-tools/36.1.0
 mkdir -p /home/ubuntu/Desktop
 cp /usr/share/applications/android-studio.desktop /home/ubuntu/Desktop/
 chmod +x /home/ubuntu/Desktop/android-studio.desktop
+
+
+cat << "EOF" > /home/ubuntu/Desktop/CONNECT_ADB.txt
+
+=== STEP 6: Wireless Debugging ===
+1. Enable Wireless Debugging on your phone.
+2. Tap "Pair device with pairing code" in Developer Settings.
+3. Note the IP, Port, and Pairing Code in that popup.
+4. Open an Ubuntu terminal and type: adb pair <ip>:<port>
+5. Enter the code. It will say "Successfully paired".
+6. go back to Developer options, look at the main Wireless Debugging screen for the actual, persistent IP and Port.
+7. In the terminal, type: adb connect <same ip>:<new port>
+
+That's it! The device will show up in Android Studio. Have fun building!
+EOF
 '
 
 clear
