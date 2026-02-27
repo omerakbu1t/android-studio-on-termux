@@ -1,7 +1,7 @@
 
 TARGET_USER="ubuntu"
 BASE_STUDIO_URL="https://redirector.gvt1.com/edgedl/android/studio/ide-zips/2024.1.1.11/android-studio-2024.1.1.11-linux.tar.gz"
-TARGET_STUDIO_URL="https://edgedl.me.gvt1.com/android/studio/ide-zips/2025.2.3.9/android-studio-2025.2.3.9-linux.tar.gz"
+TARGET_STUDIO_URL="https://edgedl.me.gvt1.com/android/studio/ide-zips/2025.3.1.6/android-studio-panda1-rc1-linux.tar.gz"
 
 # step 1: set up environment:
 echo "Setting up Termux..."
@@ -56,19 +56,38 @@ sudo apt-get --fix-missing install -y
 sudo apt --fix-broken install -y
 sudo wget -O /usr/share/applications/android-studio.desktop https://raw.githubusercontent.com/omerakbu1t/android-studio-on-termux/main/android-studio.desktop
 
+# 3. Replace the bundled JBR with the system JDK
+mv ~/Android/android-studio/jbr ~/Android/android-studio/jbr_x86_backup
+ln -s /usr/lib/jvm/java-21-openjdk-arm64 ~/Android/android-studio/jbr
+
+# 4. Replace the bundled skiko with the system one (fixes rendering issues)
+# Create the directory just in case it doesn't exist yet
+mkdir -p ~/Android/android-studio/lib/skiko-awt-runtime-all/
+cd ~/Android/android-studio/lib/skiko-awt-runtime-all/
+wget https://repo1.maven.org/maven2/org/jetbrains/skiko/skiko-awt-runtime-linux-arm64/0.8.9/skiko-awt-runtime-linux-arm64-0.8.9.jar
+unzip -j skiko-awt-runtime-linux-arm64-0.8.9.jar "libskiko-linux-arm64.so"
+rm skiko-awt-runtime-linux-arm64-0.8.9.jar
+
+# disable chromium based rendering for better performance and stability (it will use software rendering instead, which is more compatible with ARM devices)
+echo "-Dide.browser.jcef.enabled=false" >> ~/Android/android-studio/bin/studio64.vmoptions
+
+# disable memory cleaner to prevent OOM errors, and disable opengl rendering which causes freezes and crashes on many devices
+echo "-Dide.memory.cleaner=false" >> ~/Android/android-studio/bin/studio64.vmoptions
+echo "-Dsun.java2d.opengl=false" >> ~/Android/android-studio/bin/studio64.vmoptions
+
+
 # 3. Create the Desktop shortcut
 mkdir -p ~/Desktop
 cp /usr/share/applications/android-studio.desktop ~/Desktop/
 chmod +x ~/Desktop/android-studio.desktop
 
-~/startxfce4.sh
+
 # 4. Generate the "Next Steps" text file on the Desktop
 cat << "EOF" > ~/Desktop/NEXT_STEPS.txt
 === STEP 5: Set up Android Studio ===
 1. Open Android Studio from your new desktop shortcut.
 2. Install Android 14 (API 34) SDK instead of the default 16.
 3. IMPORTANT: when you create a project, stop the first gradle build. then:
-4. go to File > Settings > Build > Build Tools > Gradle and change the wrapper to openjdk-21-jdk-arm64.
 5. Add this to your project gradle.properties:
    android.aapt2FromMavenOverride=/data/data/com.termux/files/usr/bin/aapt2
 
@@ -87,3 +106,20 @@ ln -s $(which adb) ~/Android/Sdk/platform-tools/adb
 thats all, have fun! MAKE SURE YOU DONT UPDATE VERSIONS UNLESS YOU KNOW WHAT URE DOING.
 EOF
 '
+
+
+clear
+echo "-------------------------------"
+echo "Terminal setup complete!" 
+echo "IMPORTANT:Please check the NEXT_STEPS.txt file on your Desktop for further instructions. "
+echo "IDE WONT WORK PROPERLY UNLESS YOU FOLLOW THEM CAREFULLY."
+echo "-------------------------------"
+
+sleep 3
+for i in {5..1}; do
+    echo -ne "Launching in $i seconds...\r"
+    sleep 1
+done
+echo -e "\nLaunching now!"
+
+./startxfce4.sh

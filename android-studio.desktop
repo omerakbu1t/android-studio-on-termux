@@ -2,6 +2,7 @@
 Type=Application
 Name=Android Studio
 Icon=android-studio
+Exec=/home/ubuntu/Android/android-studio/bin/studio.sh
 Icon=/home/ubuntu/Android/android-studio/bin/studio.png
 Comment=Android IDE
 Categories=Development;IDE;
