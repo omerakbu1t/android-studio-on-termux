@@ -141,7 +141,7 @@ cp -rf /home/ubuntu/android-sdk/build-tools/36.1.0/* /home/ubuntu/Android/Sdk/bu
 # 3. Clean up the leftover downloaded archive folder
 rm -rf /home/ubuntu/android-sdk
 
-# 4. Set the SDK path in Android Studios config to avoid the error on first launch. We have to do this manually because the bundled JBR doesn't work with the sdkmanager tool, so we cant set it up through the normal command line way.
+# 4. Set the SDK path in Android Studios config to avoid the error on first launch. We have to do this manually because the bundled JBR doesnt work with the sdkmanager tool, so we cant set it up through the normal command line way.
 mkdir -p /home/ubuntu/.config/Google/AndroidStudio2025.3.1/options
 cat << "EOF" > /home/ubuntu/.config/Google/AndroidStudio2025.3.1/options/android.sdk.path.xml
 <application>
