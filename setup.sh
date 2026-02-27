@@ -150,7 +150,7 @@ mkdir -p /home/ubuntu/Desktop
 cp /usr/share/applications/android-studio.desktop /home/ubuntu/Desktop/
 chmod +x /home/ubuntu/Desktop/android-studio.desktop
 
-cat << "EOF" > /home/ubuntu/Desktop/ADB Connection.txt
+cat << "EOF" > /home/ubuntu/Desktop/ADBConnection.txt
 
 Wireless Debugging
 1. Enable Wireless Debugging on your phone. (Developer Options > Wireless Debugging)
