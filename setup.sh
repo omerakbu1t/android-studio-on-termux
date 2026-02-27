@@ -1,6 +1,7 @@
 
 TARGET_USER="ubuntu"
-
+BASE_STUDIO_URL="https://redirector.gvt1.com/edgedl/android/studio/ide-zips/2024.1.1.11/android-studio-2024.1.1.11-linux.tar.gz"
+TARGET_STUDIO_URL="https://edgedl.me.gvt1.com/android/studio/ide-zips/2025.2.3.9/android-studio-2025.2.3.9-linux.tar.gz"
 
 # step 1: set up environment:
 echo "Setting up Termux..."
@@ -46,7 +47,7 @@ echo "-------------------------------"
 pd login ubuntu --user $TARGET_USER -- bash -c '
 # 1. Download and extract Android Studio
 mkdir -p ~/Android
-wget -O studio.tar.gz https://redirector.gvt1.com/edgedl/android/studio/ide-zips/2024.1.1.11/android-studio-2024.1.1.11-linux.tar.gz
+wget -O studio.tar.gz '"$TARGET_STUDIO_URL"' --no-check-certificate
 tar -xvzf studio.tar.gz -C ~/Android/
 rm studio.tar.gz
 
