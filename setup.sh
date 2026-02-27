@@ -54,9 +54,6 @@ sudo apt install xfce4 adb openjdk-21-jdk tar unzip mousepad -y
 '
 
 
-# step 4: install android studio, add shortcut, and create instructions
-
-
 pd login ubuntu --user $TARGET_USER -- bash -c '
 clear
 echo "Downloading & Installing Studio"
@@ -131,8 +128,12 @@ rm android-sdk-aarch64-linux-musl.tar.xz
 mkdir -p /home/ubuntu/Android/Sdk/cmdline-tools/latest
 mv /home/ubuntu/android-sdk/cmdline-tools/* /home/ubuntu/Android/Sdk/cmdline-tools/latest/
 
-# prepopulate sdk for to avoid rewrite
-/home/ubuntu/Android/Sdk/cmdline-tools/latest/bin/sdkmanager "platforms;android-36" "build-tools;36.1.0" "platform-tools" --verbose
+# 2. Accept licenses automatically using the 'yes' pipe
+yes | /home/ubuntu/Android/Sdk/cmdline-tools/latest/bin/sdkmanager --licenses
+
+# 3. Pre-populate SDK using the 'yes' pipe
+yes | /home/ubuntu/Android/Sdk/cmdline-tools/latest/bin/sdkmanager "platforms;android-36" "build-tools;36.1.0" "platform-tools" --verbose
+
 rm -rf /home/ubuntu/Android/Sdk/platform-tools
 rm -rf /home/ubuntu/Android/Sdk/build-tools
 # Move the native ARM64 platform-tools into the SDK
