@@ -27,22 +27,37 @@ sleep 3
 
 pd install ubuntu
 
-pd login ubuntu -- bash -c "apt update && apt upgrade -y && apt install sudo adduser nano git wget -y && adduser --disabled-password --gecos \"\" $TARGET_USER && echo \"$TARGET_USER ALL=(ALL) NOPASSWD: ALL\" > /etc/sudoers.d/$TARGET_USER && chmod 0440 /etc/sudoers.d/$TARGET_USER"
+pd login ubuntu -- bash -c '
 
+apt update -y
+apt upgrade -y 
+apt install sudo adduser nano git wget -y 
+adduser --disabled-password --gecos \"\" $TARGET_USER 
+echo \"$TARGET_USER ALL=(ALL) NOPASSWD: ALL\" > /etc/sudoers.d/$TARGET_USER
+chmod 0440 /etc/sudoers.d/$TARGET_USER
+'
+
+
+
+# step 3: bypass broken icon theme, then install GUI and required dependencies
 clear
 echo "Installing GUI. This might take a while..."
 echo "------------------------------------------"
 sleep 3
-# step 3: bypass broken icon theme, then install GUI and required dependencies
 
-pd login ubuntu --user $TARGET_USER -- bash -c "sudo wget -q http://ports.ubuntu.com/pool/universe/e/elementary-xfce/elementary-xfce-icon-theme_0.19-1_all.deb && sudo apt install ./elementary-xfce-icon-theme_0.19-1_all.deb -y && sudo apt-mark hold elementary-xfce-icon-theme && sudo apt install xfce4 adb openjdk-21-jdk tar mousepad -y"
+pd login ubuntu --user $TARGET_USER -- bash -c '
+sudo wget -q http://ports.ubuntu.com/pool/universe/e/elementary-xfce/elementary-xfce-icon-theme_0.19-1_all.deb 
+sudo apt install ./elementary-xfce-icon-theme_0.19-1_all.deb -y 
+sudo apt-mark hold elementary-xfce-icon-theme
+sudo apt install xfce4 adb openjdk-21-jdk tar unzip mousepad -y
+'
 
+
+# step 4: install android studio, add shortcut, and create instructions
 clear
 echo "Downloading & Installing Studio"
 echo "-------------------------------"
-# step 4: install android studio
 
-# step 4: install android studio, add shortcut, and create instructions
 
 pd login ubuntu --user $TARGET_USER -- bash -c '
 # 1. Download and extract Android Studio
@@ -62,10 +77,11 @@ ln -s /usr/lib/jvm/java-21-openjdk-arm64 ~/Android/android-studio/jbr
 
 # 4. Replace the bundled skiko with the system one (fixes rendering issues)
 mkdir -p ~/Android/android-studio/lib/skiko-awt-runtime-all/
+
 cd ~/Android/android-studio/lib/skiko-awt-runtime-all/
-wget https://repo1.maven.org/maven2/org/jetbrains/skiko/skiko-awt-runtime-linux-arm64/0.8.9/skiko-awt-runtime-linux-arm64-0.8.9.jar
-unzip -j skiko-awt-runtime-linux-arm64-0.8.9.jar "libskiko-linux-arm64.so"
-rm skiko-awt-runtime-linux-arm64-0.8.9.jar
+wget https://repo1.maven.org/maven2/org/jetbrains/skiko/skiko-awt-runtime-linux-arm64/0.9.47/skiko-awt-runtime-linux-arm64-0.9.47.jar
+unzip -j skiko-awt-runtime-linux-arm64-0.9.47.jar "libskiko-linux-arm64.so"
+rm skiko-awt-runtime-linux-arm64-0.9.47.jar
 
 # disable chromium based rendering for better performance and stability (it will use software rendering instead, which is more compatible with ARM devices)
 echo "-Dide.browser.jcef.enabled=false" >> ~/Android/android-studio/bin/studio64.vmoptions
@@ -88,6 +104,20 @@ mkdir -p ~/Android/android-studio/lib/jna/aarch64
 ln -sf /usr/lib/aarch64-linux-gnu/jni/libjnidispatch.so ~/Android/android-studio/lib/jna/aarch64/libjnidispatch.so
 
 
+
+cd ~
+wget https://github.com/HomuHomu833/android-sdk-custom/releases/download/36.0.0/android-sdk-aarch64-linux-musl.tar.xz
+tar -xf android-sdk-aarch64-linux-musl.tar.xz
+rm android-sdk-aarch64-linux-musl.tar.xz
+mkdir Android/Sdk
+# Move the native ARM64 platform-tools into the SDK
+mv ~/android-sdk/platform-tools ~/Android/Sdk/
+mv ~/android-sdk/build-tools ~/Android/Sdk/
+mv ~/android-sdk/cmdline-tools ~/Android/Sdk/
+rm -rf ~/android-sdk
+
+mkdir -p ~/.gradle
+echo "android.aapt2FromMavenOverride=/home/ubuntu/Android/Sdk/build-tools/36.1.0/aapt2" >> ~/.gradle/gradle.properties
 
 # 3. Create the Desktop shortcut
 mkdir -p ~/Desktop
