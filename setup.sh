@@ -150,6 +150,19 @@ mkdir -p /home/ubuntu/Desktop
 cp /usr/share/applications/android-studio.desktop /home/ubuntu/Desktop/
 chmod +x /home/ubuntu/Desktop/android-studio.desktop
 
+cat << "EOF" > /home/ubuntu/Desktop/ADB Connection.txt
+
+Wireless Debugging
+1. Enable Wireless Debugging on your phone. (Developer Options > Wireless Debugging)
+2. Tap "Pair device with pairing code" in Developer Settings.
+3. Note the IP, Port, and Pairing Code in that popup.
+4. Open an Ubuntu terminal and type: adb pair <ip>:<port>
+5. Enter the code. It will say "Successfully paired".
+6. Look at the main Wireless Debugging screen for the new, persistent IP and Port.
+7. In the terminal, type: adb connect <same ip>:<new port>
+
+Thats it! The device will show up in Android Studio. Have fun building!
+EOF
 '
 
 clear
