@@ -224,14 +224,14 @@ clear
 echo "Fixing & Prepopulating Android SDK"
 echo "-------------------------------"
 sleep 3
-
+SDK_URL=""
 cd $HOME_DIR
 if [ '"$PLATFORM_VERSION"' = "34" ]; then
-    SDK_URL=""
+    SDK_URL="https://github.com/omerakbu1t/android-studio-on-termux/releases/download/34.0.4/android-sdk-aarch64-34.0.4.tar.xz"
 elif [ '"$PLATFORM_VERSION"' = "36.1" ]; then
     SDK_URL="https://github.com/HomuHomu833/android-sdk-custom/releases/download/36.0.0/android-sdk-aarch64-linux-musl.tar.xz"
 else
-    SDK_URL=""
+    SDK_URL="https://github.com/HomuHomu833/android-sdk-custom/releases/download/36.0.0/android-sdk-aarch64-linux-musl.tar.xz"
 fi
 wget -O androidsdk.tar.xz "$SDK_URL"
 tar -xf androidsdk.tar.xz
