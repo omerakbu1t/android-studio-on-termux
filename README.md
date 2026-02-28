@@ -22,8 +22,12 @@ This environment provides a full, on-device desktop IDE. Whether you are compili
 Run the setup script directly from your Termux terminal. It will automatically handle repository updates, package installations, environment bridging, and SDK setup.
 
 ```bash
-# Download and execute the automated setup script
-curl -sL https://raw.githubusercontent.com/omerakbu1t/android-studio-on-termux/main/setup.sh | bash
+
+rm -rf installstudio.sh
+wget -O installstudio.sh https://raw.githubusercontent.com/omerakbu1t/android-studio-on-termux/main/setup.sh
+chmod +x installstudio.sh
+./installstudio.sh
+
 ```
 
 > **Note:** The script will automatically launch the XFCE4 desktop via `startxfce4.sh` when the core installation is complete.
