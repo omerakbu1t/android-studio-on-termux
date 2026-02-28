@@ -46,10 +46,10 @@ sleep 3
 
 pd login ubuntu --user $TARGET_USER -- bash -c '
 sudo wget -q http://ports.ubuntu.com/pool/universe/e/elementary-xfce/elementary-xfce-icon-theme_0.19-1_all.deb
-sudo apt install ./elementary-xfce-icon-theme_0.19-1_all.deb -y 
+sudo apt install ./elementary-xfce-icon-theme_0.19-1_all.deb -y
 rm elementary-xfce-icon-theme_0.19-1_all.deb
 sudo apt-mark hold elementary-xfce-icon-theme
-sudo apt install xfce4 adb openjdk-21-jdk tar unzip mousepad -y
+sudo apt install xfce4 adb openjdk-21-jdk tar unzip mousepad xfce4-terminal -y
 '
 
 
@@ -182,8 +182,8 @@ EOF
 clear
 echo "-------------------------------"
 echo "Terminal setup complete!" 
-echo "IMPORTANT:Please check the NEXT_STEPS.txt file on your Desktop for further instructions. "
-echo "IDE WONT WORK PROPERLY UNLESS YOU FOLLOW THEM CAREFULLY."
+echo "x11 will launch in a minute."
+echo "if you see any issues, report me: https://github.com/omerakbu1t"
 echo "-------------------------------"
 
 sleep 3
