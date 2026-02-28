@@ -134,7 +134,7 @@ echo "--------------------"
 sleep 3
 # step 2: install & configure ubuntu
 
-pd install $DISTRO -y
+pd install $DISTRO
 
 pd login $DISTRO -- bash -c "
 
