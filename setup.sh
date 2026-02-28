@@ -63,6 +63,8 @@ mkdir -p /home/ubuntu/Android
 wget -O studio.tar.gz '"$TARGET_STUDIO_URL"' --no-check-certificate
 tar -xvzf studio.tar.gz -C /home/ubuntu/Android/
 rm studio.tar.gz
+sudo ln -s /home/ubuntu/Android/android-studio/bin/studio.sh /usr/local/bin/studio
+
 
 clear
 echo "Creating Desktop Shortcut"
