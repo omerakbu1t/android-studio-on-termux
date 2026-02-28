@@ -30,7 +30,7 @@ echo "3. |2025.2.3| Studio Otter 3 Stable"
 echo "4. |2024.1.1| Studio 2024.1.1.11"
 echo "--------------------------------"
 
-read -p "Enter your choice (1-4): " studio_choice
+read -p "Enter your choice (1-4): " studio_choice < /dev/tty
 
 if [ "$studio_choice" = "1" ]; then
     STUDIO_SOURCE="https://edgedl.me.gvt1.com/android/studio/ide-zips/2025.3.3.2/android-studio-panda3-canary2-linux.tar.gz"
@@ -67,7 +67,7 @@ echo "select Proot Distro to use:"
 echo "1. Ubuntu (Recommended)"
 echo "2. Debian"
 echo "--------------------------------"
-read -p "Enter your choice (1 or 2) (default: 1): " distro_choice
+read -p "Enter your choice (1 or 2) (default: 1): " distro_choice < /dev/tty
 
 
 if [ "$distro_choice" = "2" ]; then
@@ -88,10 +88,10 @@ echo "----------------------------------"
 echo "do you want to set a custom username for the $DISTRO environment? (default: $TARGET_USER_NAME)"
 echo "press y to set a custom username, or any other key to continue with the default one."
 echo "----------------------------------"
-read -p "Enter your choice (y/N): " custom_user_choice
+read -p "Enter your choice (y/N): " custom_user_choice < /dev/tty
 
 if [ "$custom_user_choice" = "y" ] || [ "$custom_user_choice" = "Y" ]; then
-    read -p "Enter the desired username: " input_username
+    read -p "Enter the desired username: " input_username < /dev/tty
     if [ -n "$input_username" ]; then
         TARGET_USER_NAME="$input_username"
     else
