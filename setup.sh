@@ -108,7 +108,6 @@ echo "-Dide.browser.jcef.enabled=false" >> /home/ubuntu/Android/android-studio/b
 # disable memory cleaner to prevent OOM errors, and disable opengl rendering which causes freezes and crashes on many devices
 echo "-Dide.memory.cleaner=false" >> /home/ubuntu/Android/android-studio/bin/studio64.vmoptions
 echo "-Dsun.java2d.opengl=false" >> /home/ubuntu/Android/android-studio/bin/studio64.vmoptions
-echo "-Didea.filewatcher.disabled=true" >> /home/ubuntu/Android/android-studio/bin/studio64.vmoptions
 echo "-Djna.nounpack=true" >> /home/ubuntu/Android/android-studio/bin/studio64.vmoptions
 
 # Link the native Ubuntu ARM64 JNA into the amd64 folder
@@ -117,6 +116,23 @@ ln -sf /usr/lib/aarch64-linux-gnu/jni/libjnidispatch.system.so /home/ubuntu/Andr
 # Also link it to an aarch64 folder, just to be safe if Studio gets smart later
 mkdir -p /home/ubuntu/Android/android-studio/lib/jna/aarch64
 ln -sf /usr/lib/aarch64-linux-gnu/jni/libjnidispatch.system.so /home/ubuntu/Android/android-studio/lib/jna/aarch64/libjnidispatch.so
+
+# Assuming your script's current working directory is the Android Studio root
+PROPERTIES_FILE="/home/ubuntu/Android/android-studio/bin/idea.properties"
+
+# Append the suppression flags
+echo "" >> "$PROPERTIES_FILE"
+echo "# Suppress script launcher and custom JRE warnings for Termux/PRoot" >> "$PROPERTIES_FILE"
+echo "ide.native.launcher=false" >> "$PROPERTIES_FILE"
+echo "idea.no.jre.check=true" >> "$PROPERTIES_FILE"
+echo "idea.filewatcher.disabled=true" >> "$PROPERTIES_FILE"
+
+
+
+
+
+
+
 
 clear
 echo "Fixing & Prepopulating Android SDK"
@@ -144,8 +160,10 @@ cp -rf /home/ubuntu/android-sdk/build-tools/36.1.0/* /home/ubuntu/Android/Sdk/bu
 rm -rf /home/ubuntu/android-sdk
 
 # 4. Set the SDK path in Android Studios config to avoid the error on first launch. We have to do this manually because the bundled JBR doesnt work with the sdkmanager tool, so we cant set it up through the normal command line way.
-mkdir -p /home/ubuntu/.config/Google/AndroidStudio2025.3.1/options
-cat << "EOF" > /home/ubuntu/.config/Google/AndroidStudio2025.3.1/options/android.sdk.path.xml
+
+CONFIG_DIR="home/ubuntu/.config/Google/AndroidStudio2025.3.1/options/"
+mkdir -p "$CONFIG_DIR"
+cat << "EOF" > "$CONFIG_DIR/android.sdk.path.xml"
 <application>
 
   <component name="AndroidSdkPathStore">
@@ -156,6 +174,15 @@ cat << "EOF" > /home/ubuntu/.config/Google/AndroidStudio2025.3.1/options/android
 
 </application>
 
+EOF
+
+
+cat <<EOF > "$CONFIG_DIR/security.xml"
+<application>
+  <component name="PasswordSafe">
+    <option name="PROVIDER" value="KEEPASS" />
+  </component>
+</application>
 EOF
 
 mkdir -p /home/ubuntu/.gradle
@@ -175,7 +202,7 @@ Wireless Debugging
 4. Open an Ubuntu terminal and type: /home/ubuntu/Android/Sdk/platform-tools/adb pair ip:port
 5. Enter the code. It will say "Successfully paired".
 6. Look at the main Wireless Debugging screen for the new, persistent IP and Port.
-7. In the terminal, type: adb connect /home/ubuntu/Android/Sdk/platform-tools/adb pair ip:newport
+7. In the terminal, type: /home/ubuntu/Android/Sdk/platform-tools/adb pair ip:newport
 
 Thats it! The device will show up in Android Studio. Have fun building!
 EOF
