@@ -23,7 +23,7 @@ Run the setup script directly from your Termux terminal. It will automatically h
 
 ```bash
 # Download and execute the automated setup script
-curl -sL [https://raw.githubusercontent.com/omerakbu1t/android-studio-on-termux/main/setup.sh](https://raw.githubusercontent.com/omerakbu1t/android-studio-on-termux/main/setup.sh) | bash
+curl -sL https://raw.githubusercontent.com/omerakbu1t/android-studio-on-termux/main/setup.sh | bash
 ```
 
 > **Note:** The script will automatically launch the XFCE4 desktop via `startxfce4.sh` when the core installation is complete.
