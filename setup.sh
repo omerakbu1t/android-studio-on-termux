@@ -117,12 +117,9 @@ ln -sf /usr/lib/aarch64-linux-gnu/jni/libjnidispatch.system.so /home/ubuntu/Andr
 mkdir -p /home/ubuntu/Android/android-studio/lib/jna/aarch64
 ln -sf /usr/lib/aarch64-linux-gnu/jni/libjnidispatch.system.so /home/ubuntu/Android/android-studio/lib/jna/aarch64/libjnidispatch.so
 
-# Assuming your script's current working directory is the Android Studio root
-PROPERTIES_FILE="/home/ubuntu/Android/android-studio/bin/idea.properties"
 
-# Append the suppression flags
+PROPERTIES_FILE="/home/ubuntu/Android/android-studio/bin/idea.properties"
 echo "" >> "$PROPERTIES_FILE"
-echo "# Suppress script launcher and custom JRE warnings for Termux/PRoot" >> "$PROPERTIES_FILE"
 echo "ide.native.launcher=false" >> "$PROPERTIES_FILE"
 echo "idea.no.jre.check=true" >> "$PROPERTIES_FILE"
 echo "idea.filewatcher.disabled=true" >> "$PROPERTIES_FILE"
@@ -161,7 +158,7 @@ rm -rf /home/ubuntu/android-sdk
 
 # 4. Set the SDK path in Android Studios config to avoid the error on first launch. We have to do this manually because the bundled JBR doesnt work with the sdkmanager tool, so we cant set it up through the normal command line way.
 
-CONFIG_DIR="home/ubuntu/.config/Google/AndroidStudio2025.3.1/options/"
+CONFIG_DIR="/home/ubuntu/.config/Google/AndroidStudio2025.3.1/options"
 mkdir -p "$CONFIG_DIR"
 cat << "EOF" > "$CONFIG_DIR/android.sdk.path.xml"
 <application>
@@ -184,6 +181,36 @@ cat <<EOF > "$CONFIG_DIR/security.xml"
   </component>
 </application>
 EOF
+
+
+cat <<EOF > "$CONFIG_DIR/other.xml"
+<application>
+  <component name="FileEditorProviderManager">{}</component>
+  <component name="NotRoamableUiSettings">
+    <option name="fontSize" value="13.0" />
+    <option name="presentationModeIdeScale" value="1.75" />
+  </component>
+  <component name="PropertyService"><![CDATA[{
+  "keyToString": {
+    "Notification.DisplayName-DoNotAsk-File Watcher Messages": "File system synchronization issues detected",
+    "Notification.DisplayName-DoNotAsk-System Health": "System health issue detected",
+    "Notification.DisplayName-DoNotAsk-bundled.jre.version.message": "",
+    "Notification.DoNotAsk-File Watcher Messages": "true",
+    "Notification.DoNotAsk-System Health": "true",
+    "Notification.DoNotAsk-bundled.jre.version.message": "true"
+  },
+  "keyToStringList": {
+    "fileTypeDetectors": [
+    ]
+  }
+}]]></component>
+</application>
+
+EOF
+
+
+
+
 
 mkdir -p /home/ubuntu/.gradle
 echo "android.aapt2FromMavenOverride=/home/ubuntu/Android/Sdk/build-tools/36.1.0/aapt2" >> /home/ubuntu/.gradle/gradle.properties
