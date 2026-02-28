@@ -208,7 +208,13 @@ cat <<EOF > "$CONFIG_DIR/other.xml"
 
 EOF
 
+cat <<EOF > "$CONFIG_DIR/updates.xml"
 
+<application>
+  <component name="UpdatesConfigurable">
+    <option name="CHECK_NEEDED" value="false" />
+  </component>
+</application>
 
 
 
