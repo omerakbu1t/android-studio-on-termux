@@ -7,8 +7,10 @@ TARGET_STUDIO_URL="https://edgedl.me.gvt1.com/android/studio/ide-zips/2025.3.1.6
 
 STUDIO_SOURCE="https://redirector.gvt1.com/android/studio/ide-zips/2025.3.1.6/android-studio-panda1-rc1-linux.tar.gz"
 DISTRO="ubuntu"
+TARGET_USER_NAME="ubuntu"
 PLATFORM_VERSION="36.1"
 BUILD_TOOLS_VERSION="36.1.0"
+CONFIG_DIR_NAME="AndroidStudio2025.3.1"
 
 clear
 echo "STUDIO INSTALLER FOR TERMUX"
@@ -28,24 +30,28 @@ echo "3. |2025.2.3| Studio Otter 3 Stable"
 echo "4. |2024.1.1| Studio 2024.1.1.11"
 echo "--------------------------------"
 
-read -p "Enter your choice (1-5): " studio_choice
+read -p "Enter your choice (1-4): " studio_choice
 
 if [ "$studio_choice" = "1" ]; then
     STUDIO_SOURCE="https://edgedl.me.gvt1.com/android/studio/ide-zips/2025.3.3.2/android-studio-panda3-canary2-linux.tar.gz"
     PLATFORM_VERSION="36.1"
     BUILD_TOOLS_VERSION="36.1.0"
+    CONFIG_DIR_NAME="AndroidStudio2025.3.3"
 elif [ "$studio_choice" = "2" ]; then
     STUDIO_SOURCE="https://redirector.gvt1.com/android/studio/ide-zips/2025.3.1.6/android-studio-panda1-rc1-linux.tar.gz"
     PLATFORM_VERSION="36.1"
     BUILD_TOOLS_VERSION="36.1.0"
+    CONFIG_DIR_NAME="AndroidStudio2025.3.1"
 elif [ "$studio_choice" = "3" ]; then
     STUDIO_SOURCE="https://edgedl.me.gvt1.com/android/studio/ide-zips/2025.2.3.9/android-studio-2025.2.3.9-linux.tar.gz"
     PLATFORM_VERSION="36.1"
     BUILD_TOOLS_VERSION="36.1.0"
+    CONFIG_DIR_NAME="AndroidStudio2025.2.3"
 elif [ "$studio_choice" = "4" ]; then
     STUDIO_SOURCE="https://redirector.gvt1.com/edgedl/android/studio/ide-zips/2024.1.1.11/android-studio-2024.1.1.11-linux.tar.gz"
     PLATFORM_VERSION="34"
     BUILD_TOOLS_VERSION="34.0.4"
+    CONFIG_DIR_NAME="AndroidStudio2024.1.1"
 else
     echo "Invalid option. Exiting."
     exit 1
@@ -66,13 +72,32 @@ read -p "Enter your choice (1 or 2) (default: 1): " distro_choice
 
 if [ "$distro_choice" = "2" ]; then
     DISTRO="debian"
+    TARGET_USER_NAME="debian"
 else
     DISTRO="ubuntu"
+    TARGET_USER_NAME="ubuntu"
 fi
 
 echo "selected $DISTRO."
 sleep 3
 clear
+
+echo "selected studio version: $STUDIO_SOURCE"
+echo "selected distro: $DISTRO"
+echo "----------------------------------"
+echo "do you want to set a custom username for the $DISTRO environment? (default: $TARGET_USER_NAME)"
+echo "press y to set a custom username, or any other key to continue with the default one."
+echo "----------------------------------"
+read -p "Enter your choice (y/N): " custom_user_choice
+
+if [ "$custom_user_choice" = "y" ] || [ "$custom_user_choice" = "Y" ]; then
+    read -p "Enter the desired username: " input_username
+    if [ -n "$input_username" ]; then
+        TARGET_USER_NAME="$input_username"
+    else
+        echo "No username entered. Using default: $TARGET_USER_NAME"
+    fi
+fi
 
 
 
@@ -80,9 +105,9 @@ echo ""
 echo "Final confirmation:"
 echo "Studio Version: $STUDIO_SOURCE"
 echo "Distro: $DISTRO"
-echo "[Ctrl + C to cancel]"
+echo "Username: $TARGET_USER_NAME"
 echo "----------------------------------"
-for i in {8..1}; do
+for i in {10..1}; do
     echo -ne "installation will start in $i seconds. [ctrl + C to cancel]\r"
     sleep 1
 done
@@ -98,8 +123,7 @@ pkg install termux-x11-nightly -y
 pkg install tur-repo -y
 pkg install pulseaudio -y
 pkg install proot-distro -y
-pkg install wget git aapt2 -y
-# aapt2 is needed for later replacement of native android studio aapt2
+pkg install wget git -y
 
 wget -O  ~/startxfce4.sh https://raw.githubusercontent.com/omerakbu1t/android-studio-on-termux/main/startxfce4.sh
 chmod +x ~/startxfce4.sh
@@ -117,9 +141,9 @@ pd login $DISTRO -- bash -c "
 apt update -y
 apt upgrade -y 
 apt install sudo adduser nano git wget -y 
-adduser --disabled-password --gecos \"\" $DISTRO
-echo \"$DISTRO ALL=(ALL) NOPASSWD: ALL\" > /etc/sudoers.d/$DISTRO
-chmod 0440 /etc/sudoers.d/$DISTRO
+adduser --disabled-password --gecos \"\" $TARGET_USER_NAME
+echo \"$TARGET_USER_NAME ALL=(ALL) NOPASSWD: ALL\" > /etc/sudoers.d/$TARGET_USER_NAME
+chmod 0440 /etc/sudoers.d/$TARGET_USER_NAME
 "
 
 
@@ -130,18 +154,18 @@ echo "Installing GUI. This might take a while..."
 echo "------------------------------------------"
 sleep 3
 
-pd login $DISTRO --user $DISTRO -- bash -c '
+pd login $DISTRO --user $TARGET_USER_NAME -- bash -c '
 sudo wget -q http://ports.ubuntu.com/pool/universe/e/elementary-xfce/elementary-xfce-icon-theme_0.19-1_all.deb
 sudo apt install ./elementary-xfce-icon-theme_0.19-1_all.deb -y
 rm elementary-xfce-icon-theme_0.19-1_all.deb
 sudo apt-mark hold elementary-xfce-icon-theme
-sudo apt install xfce4 openjdk-21-jdk tar unzip mousepad xfce4-terminal -y
+sudo apt install xfce4 openjdk-21-jdk tar unzip mousepad xfce4-terminal xz-utils -y
 '
 
 
-pd login $DISTRO --user $DISTRO -- bash -c '
+pd login $DISTRO --user $TARGET_USER_NAME -- bash -c '
 
-HOME_DIR='"/home/$DISTRO"'
+HOME_DIR='"/home/$TARGET_USER_NAME"'
 
 clear
 echo "Downloading & Installing Studio"
@@ -259,7 +283,7 @@ sudo ln -s $HOME_DIR/Android/Sdk/platform-tools/adb /usr/local/bin/adb
 
 # 4. Set the SDK path in Android Studios config to avoid the error on first launch. We have to do this manually because the bundled JBR doesnt work with the sdkmanager tool, so we cant set it up through the normal command line way.
 
-CONFIG_DIR="$HOME_DIR/.config/Google/AndroidStudio2025.3.1/options"
+CONFIG_DIR="$HOME_DIR/.config/Google/'"$CONFIG_DIR_NAME"'/options"
 mkdir -p "$CONFIG_DIR"
 cat << "EOF" > "$CONFIG_DIR/android.sdk.path.xml"
 <application>
@@ -320,7 +344,7 @@ cat <<EOF > "$CONFIG_DIR/updates.xml"
 EOF
 
 mkdir -p $HOME_DIR/.gradle
-echo "android.aapt2FromMavenOverride=$HOME_DIR/Android/Sdk/build-tools/36.1.0/aapt2" >> $HOME_DIR/.gradle/gradle.properties
+echo "android.aapt2FromMavenOverride=$HOME_DIR/Android/Sdk/build-tools/'"$BUILD_TOOLS_VERSION"'/aapt2" >> $HOME_DIR/.gradle/gradle.properties
 
 # 3. Create the Desktop shortcut
 mkdir -p $HOME_DIR/Desktop
